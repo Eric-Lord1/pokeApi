@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:11.1  # Usa una versión estable
+    container_name: mariadb_pokedb
+    restart: always
+    environment:
+      MARIADB_DATABASE: pokedb
+      MARIADB_USER: user
+      MARIADB_PASSWORD: System
+      MARIADB_ROOT_PASSWORD: System
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "mariadb", "-h", "localhost", "-uuser", "-pSystem", "-e", "SELECT 1"]
+      interval: 5s
+      retries: 3
+      start_period: 20s
+  app:
+    build:
+      context: .
+    container_name: pokeapi
+    restart: unless-stopped
+    ports:
+      - "443:443"
+    environment:
+      - PORT=8449
+      - MYSQL_HOST=mariadb  # Nombre del servicio de la BD
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=System
+      - MYSQL_DATABASE=pokedb
+    networks:
+      - internal
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    command: >
+      sh -c "
+      echo 'Esperando a la base de datos...' &&
+      until mysql -h mariadb -u user -pSystem -e 'SELECT 1'; do sleep 5; done &&
+      python database_script.py &&
+      uvicorn main:app --host 0.0.0.0 --port 443 --ssl-keyfile /app/ssl/key.pem --ssl-certfile /app/ssl/cert.pem
+      "
+      
+networks:
+  internal:
+    name: internal
+
+volumes:
+  mariadb_data:
+    driver: local
