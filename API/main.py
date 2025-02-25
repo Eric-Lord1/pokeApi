@@ -27,7 +27,7 @@ def obtenir_pokemon(pokemon_id: int):
     conn.close()
     if not resultat:
         raise HTTPException(status_code=404, detail="Pokemon no trobat")
-    return Pokemon(id=resultat["id"], name=resultat["nom"], tipo=resultat.get("tipo"), altura=resultat.get("altura"), img=resultat.get("img"))
+    return Pokemon(id=resultat["id"], name=resultat["name"], tipo=resultat["tipo"].get("tipo"), altura=resultat["altura"].get("altura"), img=resultat["img"].get("img"))
 
 # Rutes per a Usuaris
 @app.post("/usuari/")
