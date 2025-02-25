@@ -5,11 +5,14 @@ def inicialitzar_bbdd():
     cursor = conn.cursor()
 
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS pokemon (
+    CREATE TABLE IF NOT EXISTS pokemon (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        nom VARCHAR(100) NOT NULL
-        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    """)
+        name VARCHAR(100) NOT NULL,
+        altura DECIMAL(5, 2),
+        tipo VARCHAR(50),
+        img VARCHAR(255)
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+""")
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS usuari (

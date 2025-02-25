@@ -10,7 +10,7 @@ app = FastAPI()
 def crear_pokemon(nom: str, tipo: Optional[str] = None, altura: Optional[float] = None, img: Optional[str] = None):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO pokemon (nom, tipo, altura, img) VALUES (%s, %s, %s, %s)", (nom, tipo, altura, img))
+    cursor.execute("INSERT INTO pokemon (name, tipo, altura, img) VALUES (%s, %s, %s, %s)", (nom, tipo, altura, img))
     conn.commit()
     pokemon_id = cursor.lastrowid
     cursor.close()
