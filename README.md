@@ -61,8 +61,6 @@ pip install --no-cache-dir -r requirements.txt
 openssl req -x509 -newkey rsa:4096 -keyout ./API/ssl/key.pem -out ./API/ssl/cert.pem -days 3650 -nodes
 ```
 
-
-
 ### Provar la api en local 
 Cal tenir alguna base de dades preparada, en local o en remot.
 ```
@@ -154,7 +152,6 @@ INSERT INTO reserves (idusuari, idmaterial, datareserva, datafinal) VALUES
 (1, 9, '2025-01-19', '2025-01-28'),
 (2, 10, '2025-01-20', '2025-01-29');
 ```
-
 
 # Instal·lació docker (si utilitzem un ubuntu sense configurar)
 Seguir instruccions a :

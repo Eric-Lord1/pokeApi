@@ -24,8 +24,8 @@ def create_pokemons_json(pokemons):
         single_poke = {
             "id": details["id"],
             "name": details["name"],
-            "type": details["types"][0]["type"]["name"],
-            "height": details["height"],
+            "tipo": details["types"][0]["type"]["name"],
+            "altura": details["height"],
             "img": details["sprites"]["front_default"]
         }
         pokemons2return.append(single_poke)
