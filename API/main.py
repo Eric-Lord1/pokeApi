@@ -7,7 +7,7 @@ app = FastAPI()
 
 # Rutes per a Pokémon
 @app.post("/pokemon/")
-def crear_pokemon(name: str, tipo: Optional[str] = None, altura: Optional[float] = None, img: Optional[str] = None):
+def crear_pokemon(name: str, tipo: Optional[str] = None, altura: Optional[int] = None, img: Optional[str] = None):
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("INSERT INTO pokemon (name, tipo, altura, img) VALUES (%s, %s, %s, %s)", (name, tipo, altura, img))

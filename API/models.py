@@ -3,7 +3,7 @@ from typing import Optional
 
 class Pokemon:
     def __init__(self, id: Optional[int] = None, name: Optional[str] = None, tipo: Optional[str] = None, 
-                 altura: Optional[float] = None, img: Optional[str] = None):
+                 altura: Optional[int] = None, img: Optional[str] = None):
         self.id = id
         self.name = name
         self.tipo = tipo
