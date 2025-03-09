@@ -2,16 +2,21 @@ from datetime import date
 from typing import Optional
 
 class Pokemon:
+<<<<<<< HEAD
     def __init__(self, id: Optional[int] = None, name: Optional[str] = None, tipo: Optional[str] = None, 
                  altura: Optional[int] = None, img: Optional[str] = None):
+=======
+    def __init__(self, id: Optional[int] = None, nom: Optional[str] = None, tipo: Optional[str] = None, 
+                 altura: Optional[float] = None, img: Optional[str] = None):
+>>>>>>> 130ee13b6660116b22b2291aab0911b86eb0d007
         self.id = id
-        self.name = name
+        self.nom = nom
         self.tipo = tipo
         self.altura = altura
         self.img = img
 
     def __repr__(self):
-        return f"Pokemon(id={self.id}, name={self.name}, tipo={self.tipo}, altura={self.altura}, img={self.img})"
+        return f"Pokemon(id={self.id}, nom={self.nom}, tipo={self.tipo}, altura={self.altura}, img={self.img})"
 
 class Usuari:
     def __init__(self, id: Optional[int] = None, nom: Optional[str] = None):

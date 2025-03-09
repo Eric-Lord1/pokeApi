@@ -2,20 +2,35 @@ from fastapi import FastAPI, HTTPException
 from datetime import date
 from database import get_db_connection
 from models import Pokemon, Usuari, Reserva
+from typing import Optional
 
 app = FastAPI()
+
+# Retorna tots els pokemons
+@app.get("/pokemons")
+def obtenir_tots_pokemons():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM pokemon")
+    resultat = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    if not resultat:
+        raise HTTPException(status_code=404, detail="No hi ha Pokémon disponibles")
+    pokemons = [Pokemon(id=row["id"], nom=row["nom"], tipo=row["tipo"], altura=row["altura"], img=row["img"]) for row in resultat]
+    return pokemons
 
 # Rutes per a Pokémon
 @app.post("/pokemon/")
 def crear_pokemon(name: str, tipo: Optional[str] = None, altura: Optional[int] = None, img: Optional[str] = None):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO pokemon (name, tipo, altura, img) VALUES (%s, %s, %s, %s)", (name, tipo, altura, img))
+    cursor.execute("INSERT INTO pokemon (nom, tipo, altura, img) VALUES (%s, %s, %s, %s)", (nom, tipo, altura, img))
     conn.commit()
     pokemon_id = cursor.lastrowid
     cursor.close()
     conn.close()
-    return Pokemon(id=pokemon_id, name=name, tipo=tipo, altura=altura, img=img)
+    return Pokemon(id=pokemon_id, nom=nom, tipo=tipo, altura=altura, img=img)
 
 @app.get("/pokemon/{pokemon_id}")
 def obtenir_pokemon(pokemon_id: int):
@@ -27,7 +42,29 @@ def obtenir_pokemon(pokemon_id: int):
     conn.close()
     if not resultat:
         raise HTTPException(status_code=404, detail="Pokemon no trobat")
-    return Pokemon(id=resultat["id"], name=resultat["name"].get("name"), tipo=resultat["tipo"].get("tipo"), altura=resultat["altura"].get("altura"), img=resultat["img"].get("img"))
+    return Pokemon(id=resultat["id"], nom=resultat["nom"], tipo=resultat["tipo"], altura=resultat["altura"], img=resultat["img"])
+
+@app.delete("/pokemon/{pokemon_id}")
+def eliminar_pokemon(pokemon_id: int):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM pokemon WHERE id = %s", (pokemon_id,))
+    resultat = cursor.fetchone()
+
+    if not resultat:
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=404, detail="Pokemon no trobat")
+
+    cursor.execute("DELETE FROM pokemon WHERE id = %s", (pokemon_id,))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+    
+    return {"message": f"Pokémon amb ID {pokemon_id} eliminat correctament"}
+
 
 # Rutes per a Usuaris
 @app.post("/usuari/")

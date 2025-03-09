@@ -7,7 +7,7 @@ def inicialitzar_bbdd():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS pokemon (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
+        nom VARCHAR(100) NOT NULL,
         altura DECIMAL(5, 2),
         tipo VARCHAR(50),
         img VARCHAR(255)
