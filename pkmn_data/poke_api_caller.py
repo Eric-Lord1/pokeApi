@@ -23,7 +23,7 @@ def create_pokemons_json(pokemons):
         details = requests.get(pokemon["url"]).json()
         single_poke = {
             "id": details["id"],
-            "name": details["name"],
+            "nom": details["name"],
             "tipo": details["types"][0]["type"]["name"],
             "altura": details["height"],
             "img": details["sprites"]["front_default"]

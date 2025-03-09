@@ -2,7 +2,7 @@
 USE pokedb;
 
 -- Inserts per a la taula `pokemon`
-INSERT INTO pokemon (id, name, tipo, altura, img) VALUES
+INSERT INTO pokemon (id, nom, tipo, altura, img) VALUES
 (1, 'bulbasaur', 'grass', 7, 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'),
 (2, 'ivysaur', 'grass', 10, 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png'),
 (3, 'venusaur', 'grass', 20, 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png'),
