@@ -7,15 +7,15 @@ app = FastAPI()
 
 # Rutes per a Pokémon
 @app.post("/pokemon/")
-def crear_pokemon(nom: str, tipo: Optional[str] = None, altura: Optional[float] = None, img: Optional[str] = None):
+def crear_pokemon(name: str, tipo: Optional[str] = None, altura: Optional[float] = None, img: Optional[str] = None):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO pokemon (name, tipo, altura, img) VALUES (%s, %s, %s, %s)", (nom, tipo, altura, img))
+    cursor.execute("INSERT INTO pokemon (name, tipo, altura, img) VALUES (%s, %s, %s, %s)", (name, tipo, altura, img))
     conn.commit()
     pokemon_id = cursor.lastrowid
     cursor.close()
     conn.close()
-    return Pokemon(id=pokemon_id, name=nom, tipo=tipo, altura=altura, img=img)
+    return Pokemon(id=pokemon_id, name=name, tipo=tipo, altura=altura, img=img)
 
 @app.get("/pokemon/{pokemon_id}")
 def obtenir_pokemon(pokemon_id: int):
@@ -27,7 +27,7 @@ def obtenir_pokemon(pokemon_id: int):
     conn.close()
     if not resultat:
         raise HTTPException(status_code=404, detail="Pokemon no trobat")
-    return Pokemon(id=resultat["id"], name=resultat["name"], tipo=resultat["tipo"].get("tipo"), altura=resultat["altura"].get("altura"), img=resultat["img"].get("img"))
+    return Pokemon(id=resultat["id"], name=resultat["name"].get("name"), tipo=resultat["tipo"].get("tipo"), altura=resultat["altura"].get("altura"), img=resultat["img"].get("img"))
 
 # Rutes per a Usuaris
 @app.post("/usuari/")
