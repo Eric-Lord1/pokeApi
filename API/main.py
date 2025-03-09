@@ -6,6 +6,20 @@ from typing import Optional
 
 app = FastAPI()
 
+# Retorna tots els pokemons
+@app.get("/pokemons")
+def obtenir_tots_pokemons():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM pokemon")
+    resultat = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    if not resultat:
+        raise HTTPException(status_code=404, detail="No hi ha Pokémon disponibles")
+    pokemons = [Pokemon(id=row["id"], nom=row["nom"], tipo=row["tipo"], altura=row["altura"], img=row["img"]) for row in resultat]
+    return pokemons
+
 # Rutes per a Pokémon
 @app.post("/pokemon/")
 def crear_pokemon(nom: str, tipo: Optional[str] = None, altura: Optional[float] = None, img: Optional[str] = None):
