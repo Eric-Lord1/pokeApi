@@ -44,6 +44,28 @@ def obtenir_pokemon(pokemon_id: int):
         raise HTTPException(status_code=404, detail="Pokemon no trobat")
     return Pokemon(id=resultat["id"], nom=resultat["nom"], tipo=resultat["tipo"], altura=resultat["altura"], img=resultat["img"])
 
+@app.delete("/pokemon/{pokemon_id}")
+def eliminar_pokemon(pokemon_id: int):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM pokemon WHERE id = %s", (pokemon_id,))
+    resultat = cursor.fetchone()
+
+    if not resultat:
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=404, detail="Pokemon no trobat")
+
+    cursor.execute("DELETE FROM pokemon WHERE id = %s", (pokemon_id,))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+    
+    return {"message": f"Pokémon amb ID {pokemon_id} eliminat correctament"}
+
+
 # Rutes per a Usuaris
 @app.post("/usuari/")
 def crear_usuari(nom: str):
