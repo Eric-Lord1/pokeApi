@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from datetime import date
 from database import get_db_connection
 from models import Pokemon, Usuari, Reserva
+from typing import Optional
 
 app = FastAPI()
 
