@@ -130,6 +130,26 @@ def obtenir_usuari(usuari_id: int):
         raise HTTPException(status_code=404, detail="Usuari no trobat")
     return Usuari(id=resultat["id"], nom=resultat["nom"])
 
+
+@app.get("/pokemon/search/")
+def buscar_pokemons(texto: str):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    # Usamos LIKE con % para buscar cualquier coincidencia en el nombre
+    query = "SELECT * FROM pokemon WHERE nom LIKE %s"
+    cursor.execute(query, (f"%{texto}%",))
+    
+    resultat = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    if not resultat:
+        raise HTTPException(status_code=404, detail="No s'han trobat Pokémon amb aquest nom")
+
+    pokemons = [Pokemon(id=row["id"], nom=row["nom"], tipo=row["tipo"], altura=row["altura"], img=row["img"]) for row in resultat]
+    return pokemons
+
 # Rutes per a Reserves
 @app.post("/reserva/")
 def crear_reserva(data_reserva: date, numero_comanda: str, usuari_id: int, pokemon_id: int):
