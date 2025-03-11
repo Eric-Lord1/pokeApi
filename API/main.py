@@ -65,6 +65,46 @@ def eliminar_pokemon(pokemon_id: int):
     
     return {"message": f"Pokémon amb ID {pokemon_id} eliminat correctament"}
 
+@app.patch("/pokemon/{pokemon_id}")
+def actualitzar_pokemon(pokemon_id: int, nom: Optional[str] = None, tipo: Optional[str] = None, altura: Optional[int] = None, img: Optional[str] = None):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    cursor.execute("SELECT * FROM pokemon WHERE id = %s", (pokemon_id,))
+    resultat = cursor.fetchone()
+    
+    if not resultat:
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=404, detail="Pokemon no trobat")
+    
+    updates = []
+    params = []
+    
+    if nom:
+        updates.append("nom = %s")
+        params.append(nom)
+    if tipo:
+        updates.append("tipo = %s")
+        params.append(tipo)
+    if altura is not None:
+        updates.append("altura = %s")
+        params.append(altura)
+    if img:
+        updates.append("img = %s")
+        params.append(img)
+    
+    if updates:
+        params.append(pokemon_id)
+        query = f"UPDATE pokemon SET {', '.join(updates)} WHERE id = %s"
+        cursor.execute(query, params)
+        conn.commit()
+    
+    cursor.close()
+    conn.close()
+    
+    return {"message": f"Pokémon amb ID {pokemon_id} actualitzat correctament"}
+
 
 # Rutes per a Usuaris
 @app.post("/usuari/")
