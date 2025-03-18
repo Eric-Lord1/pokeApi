@@ -131,12 +131,11 @@ def obtenir_usuari(usuari_id: int):
     return Usuari(id=resultat["id"], nom=resultat["nom"])
 
 
-@app.get("/pokemon/search/")
+@app.get("/search/{texto}")
 def buscar_pokemons(texto: str):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     
-    # Usamos LIKE con % para buscar cualquier coincidencia en el nombre
     query = "SELECT * FROM pokemon WHERE nom LIKE %s"
     cursor.execute(query, (f"%{texto}%",))
     
@@ -147,8 +146,7 @@ def buscar_pokemons(texto: str):
     if not resultat:
         raise HTTPException(status_code=404, detail="No s'han trobat Pokémon amb aquest nom")
 
-    pokemons = [Pokemon(id=row["id"], nom=row["nom"], tipo=row["tipo"], altura=row["altura"], img=row["img"]) for row in resultat]
-    return pokemons
+    return [Pokemon(id=row["id"], nom=row["nom"], tipo=row["tipo"], altura=row["altura"], img=row["img"]) for row in resultat]
 
 # Rutes per a Reserves
 @app.post("/reserva/")
